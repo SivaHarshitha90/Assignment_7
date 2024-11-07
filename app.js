@@ -29,6 +29,11 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+//Default route
+app.get("/", (req,res)=>{
+  res.json("Welcome to alpha tourist assistance")
+});
+
 app.use('/signup', signupRoute);
 app.use('/login', userRoute);
 app.use('/user', userRoute);
