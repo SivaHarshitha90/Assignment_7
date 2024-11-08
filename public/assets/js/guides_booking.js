@@ -400,7 +400,6 @@ const guides = [
         age: 34
     }
     ];
-let memberCount = 0;
 
 // Function to get guide ID from URL
 function getGuideIdFromUrl() {
@@ -428,71 +427,81 @@ function loadGuideDetails() {
         document.getElementById('guideDetails').innerHTML = '<p>Guide not found.</p>';
     }
 }
-
-// Add a new member form
-document.getElementById('addMemberBtn').addEventListener('click', function() {
-    memberCount++;
-    const memberHtml = `
+  
+  let memberCount = 0;
+  let numTravelers = 0;
+ 
+  // Add a new member form
+  document.getElementById('addMemberBtn').addEventListener('click', function() {
+    if (memberCount < numTravelers) {
+      memberCount++;
+      const memberHtml = `
         <div class="member-details">
-            <h4>Member ${memberCount}</h4>
-            <label for="name${memberCount}">Name:</label>
-            <input type="text" id="name${memberCount}" name="name${memberCount}" required>
-            
-            <label for="age${memberCount}">Age:</label>
-            <input type="number" id="age${memberCount}" name="age${memberCount}" required>
-            
-            <label for="gender${memberCount}">Gender:</label>
-            <select id="gender${memberCount}" name="gender${memberCount}" required>
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-            </select>
+          <h4>Member ${memberCount}</h4>
+          <label for="name${memberCount}">Name:</label>
+          <input type="text" id="name${memberCount}" name="name${memberCount}" required>
+          
+          <label for="age${memberCount}">Age:</label>
+          <input type="number" id="age${memberCount}" name="age${memberCount}" required>
+          
+          <label for="gender${memberCount}">Gender:</label>
+          <select id="gender${memberCount}" name="gender${memberCount}" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
         </div>
-    `;
-    document.getElementById('memberDetails').insertAdjacentHTML('beforeend', memberHtml);
-    updatePrice();
-});
-
-// Update price by fetching from an API
-// Function to update price by fetching from API
-function updatePrice() {
-    const numTravelers = parseInt(document.getElementById('numTravelers').value) || 0;
-    const placesToVisit = document.getElementById('placesToVisit').value;
-
-    if (!placesToVisit || numTravelers === 0) {
-        document.getElementById('totalPrice').textContent = 0;
-        return; // Wait until valid inputs are provided
+      `;
+      document.getElementById('memberDetails').insertAdjacentHTML('beforeend', memberHtml);
+      updatePrice();
+    } else {
+      alert('You can only add up to the number of travelers.');
     }
-
+  });
+  
+  // Update price by fetching from an API
+  function updatePrice() {
+    numTravelers = parseInt(document.getElementById('numTravelers').value) || 0;
+    const placesToVisit = document.getElementById('placesToVisit').value;
+  
+    if (!placesToVisit || numTravelers === 0) {
+      document.getElementById('totalPrice').textContent = 0;
+      return; // Wait until valid inputs are provided
+    }
+  
     // Simulate an API call with a mock response
     console.log(`Fetching price for ${numTravelers} travelers to ${placesToVisit}`);
-
+  
     // Mock API call using setTimeout to simulate network delay
     setTimeout(() => {
-        const mockApiResponse = {
-            price: numTravelers * 100 // Example calculation, $100 per traveler
-        };
-
-        console.log('API Response:', mockApiResponse);
-
-        // Update price based on mock API response
-        const totalPrice = mockApiResponse.price;
-        document.getElementById('totalPrice').textContent = totalPrice;
-
+      const mockApiResponse = {
+        price: numTravelers * 100 // Example calculation, $100 per traveler
+      };
+  
+      console.log('API Response:', mockApiResponse);
+  
+      // Update price based on mock API response
+      const totalPrice = mockApiResponse.price;
+      document.getElementById('totalPrice').textContent = totalPrice;
     }, 500); // Simulated delay of 0.5 seconds
-}
-
-// Update price when number of travelers or places to visit change
-document.getElementById('numTravelers').addEventListener('change', updatePrice);
-document.getElementById('placesToVisit').addEventListener('input', updatePrice);
-
-// Load guide details when the page loads
-window.addEventListener('load', loadGuideDetails);
-
-// Submit booking form
-document.getElementById('bookingForm').addEventListener('submit', function(e) {
+  }
+  
+  // Submit booking form
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    // Here you would typically send the form data to a server
-    alert('Booking submitted successfully!');
-});
+    const numMembers = document.querySelectorAll('.member-details').length;
+    if (numMembers < numTravelers) {
+      alert('Please enter details for all travelers.');
+    } else {
+      // Here you would typically send the form data to a server
+      alert('Booking submitted successfully!');
+    }
+  });
+  
+  // Load guide details when the page loads
+  window.addEventListener('load', loadGuideDetails);
+  
+  // Update price when number of travelers or places to visit change
+  document.getElementById('numTravelers').addEventListener('change', updatePrice);
+  document.getElementById('placesToVisit').addEventListener('input', updatePrice);
