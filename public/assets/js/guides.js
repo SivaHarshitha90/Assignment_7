@@ -5,6 +5,7 @@ const guides = [
         nativePlace: "Delhi",
         languages: ["Hindi", "English", "Punjabi"],
         places: ["Delhi", "Agra", "Jaipur"],
+        imageSrc: "boy.png",
         age: 32
     },
     {
